@@ -2,7 +2,7 @@
 version: "3"
 services:
   syncthing:
-    image: syncthing-min
+    image: flabbyninja/syncthing-min
     container_name: syncthing
     hostname: syncthing
     environment:

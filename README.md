@@ -8,4 +8,4 @@ docker-compose file included to spin up workload.
 
 Build the image with:
 
-`docker build -t syncthing-min .`
+`docker build -t flabbyninja/syncthing-min .`
