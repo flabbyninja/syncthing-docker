@@ -1,0 +1,18 @@
+---
+version: "3"
+services:
+  syncthing:
+    image: syncthing-test
+    container_name: syncthing
+    hostname: test-syncthing
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ~/sthing:/home/sync_user    
+    ports:
+      - 8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+    restart: unless-stopped
