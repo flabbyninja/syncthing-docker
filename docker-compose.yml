@@ -2,9 +2,9 @@
 version: "3"
 services:
   syncthing:
-    image: syncthing-test
+    image: syncthing-min
     container_name: syncthing
-    hostname: test-syncthing
+    hostname: syncthing
     environment:
       - PUID=1000
       - PGID=1000

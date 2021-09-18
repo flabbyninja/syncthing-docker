@@ -39,7 +39,8 @@ USER ${UID}:${GID}
 # Expose file volumes
 VOLUME /home/sync_user
 
-CMD ./syncthing
+# Run the service
+ENTRYPOINT ["./syncthing"]
 
 
 
