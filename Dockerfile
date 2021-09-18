@@ -9,8 +9,23 @@ RUN mkdir /app && \
 # Stage 2 Clean image to run
 FROM alpine:3.13.6
 WORKDIR /app
+
+# Copy app from builder image
 COPY --from=builder /app .
-CMD sh
+
+## SET USER and GROUP
+ARG USER=sync_user
+ARG GROUP=sync_users
+ARG UID=1000
+ARG GID=1000
+RUN addgroup -g ${GID} ${GROUP}
+RUN adduser -u ${UID} -G ${GROUP} -D ${USER}
+
+EXPOSE 8384
+
+# Switch to user
+USER ${UID}:${GID}
+CMD ./syncthing
 
 
 
