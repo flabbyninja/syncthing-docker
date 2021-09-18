@@ -13,6 +13,9 @@ WORKDIR /app
 # Copy app from builder image
 COPY --from=builder /app .
 
+# Required dependencies
+RUN apk add --no-cache ca-certificates su-exec tzdata
+
 ## SET USER and GROUP
 ARG USER=sync_user
 ARG GROUP=sync_users
@@ -21,10 +24,21 @@ ARG GID=1000
 RUN addgroup -g ${GID} ${GROUP}
 RUN adduser -u ${UID} -G ${GROUP} -D ${USER}
 
-EXPOSE 8384
+# SET GUI ADDRESS
+ENV STGUIADDRESS=0.0.0.0:8384
+
+# Required ports fopr SyncThing
+EXPOSE 21027/udp
+EXPOSE 22000/tcp
+EXPOSE 22000/udp
+EXPOSE 8384/tcp
 
 # Switch to user
 USER ${UID}:${GID}
+
+# Expose file volumes
+VOLUME /home/sync_user
+
 CMD ./syncthing
 
 
