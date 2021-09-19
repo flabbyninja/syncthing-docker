@@ -23,19 +23,21 @@ RUN apk add --no-cache ca-certificates su-exec tzdata
 # # ARG GROUP=sync_users
 ENV PUID=1000
 ENV PGID=1000
-RUN mkdir /home/sync_user
+ENV HOME=/home/sync_user
+ENV ENV=/etc/profile
 
 # # SET GUI ADDRESS
 ENV STGUIADDRESS=0.0.0.0:8384
 
-# # Required ports fopr SyncThing
+# # Required ports for SyncThing
 EXPOSE 21027/udp
 EXPOSE 22000/tcp
 EXPOSE 22000/udp
 EXPOSE 8384/tcp
 
-# # Expose file volumes
+# # Create homedir, and expose file volume
+RUN mkdir /home/sync_user
 VOLUME /home/sync_user
 
 # # Run the service
-ENTRYPOINT ["./scripts/docker-entrypoint.sh", "./syncthing", "-home", "/home/sync_user"]
+ENTRYPOINT ["./scripts/docker-entrypoint.sh", "./syncthing"]

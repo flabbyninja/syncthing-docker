@@ -3,8 +3,8 @@ version: "3"
 services:
   syncthing:
     image: flabbyninja/syncthing-min
-    container_name: syncthing
-    hostname: syncthing
+    container_name: dev-syncthing
+    hostname: dev-syncthing
     environment:
       - PUID=1000
       - PGID=1000
