@@ -14,20 +14,21 @@ FROM alpine:3.13.6
 ENV PUID=1000
 ENV PGID=1000
 
+# # Set environment for homedir, mapped to exposed volume
+ENV HOME=/home/sync_user
+ENV APPDIR=/app
+
 # # Set overall app dir permissions to allow auto-upgrades at runtime
-RUN mkdir /app && \
-    chown $PUID:$PGID /app
-WORKDIR /app
+RUN mkdir ${APPDIR} && \
+    chown ${PUID}:${PGID} ${APPDIR}
+WORKDIR ${APPDIR}
 
 # # Copy app from builder image, using PUID and PGID
-COPY --chown=$PUID:$PGID --from=builder /app .
+COPY --chown=${PUID}:${PGID} --from=builder ${APPDIR} .
 COPY --from=builder /build/scripts scripts
 
 # # Required dependencies
 RUN apk add --no-cache ca-certificates su-exec tzdata
-
-# # Set environment for homedir, mapped to exposed volume
-ENV HOME=/home/sync_user
 
 # # SET GUI ADDRESS
 ENV STGUIADDRESS=0.0.0.0:8384
@@ -39,8 +40,8 @@ EXPOSE 22000/udp
 EXPOSE 8384/tcp
 
 # # Create homedir, and expose file volume
-RUN mkdir /home/sync_user
-VOLUME /home/sync_user
+RUN mkdir ${HOME}
+VOLUME ${HOME}
 
 # # Run the service
 ENTRYPOINT ["./scripts/docker-entrypoint.sh", "./syncthing"]
