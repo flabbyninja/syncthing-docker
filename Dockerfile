@@ -9,22 +9,25 @@ RUN mkdir /app && \
 
 # # Stage 2 Clean image to run
 FROM alpine:3.13.6
+
+# ## SET USER and GROUP from env
+ENV PUID=1000
+ENV PGID=1000
+
+# # Set overall app dir permissions to allow auto-upgrades at runtime
+RUN mkdir /app && \
+    chown $PUID:$PGID /app
 WORKDIR /app
 
-# # Copy app from builder image
-COPY --from=builder /app .
+# # Copy app from builder image, using PUID and PGID
+COPY --chown=$PUID:$PGID --from=builder /app .
 COPY --from=builder /build/scripts scripts
 
 # # Required dependencies
 RUN apk add --no-cache ca-certificates su-exec tzdata
 
-# ## SET USER and GROUP
-# # ARG USER=sync_user
-# # ARG GROUP=sync_users
-ENV PUID=1000
-ENV PGID=1000
+# # Set environment for homedir, mapped to exposed volume
 ENV HOME=/home/sync_user
-ENV ENV=/etc/profile
 
 # # SET GUI ADDRESS
 ENV STGUIADDRESS=0.0.0.0:8384
